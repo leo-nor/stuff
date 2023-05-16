@@ -29,7 +29,7 @@ public class User implements Serializable {
         return token;
     }
 
-    public String getRank() {
+    public int getRank() {
         return rank;
     }
 
@@ -49,7 +49,7 @@ public class User implements Serializable {
         this.token = token;
     }
 
-    public void setRank(String rank) {
+    public void setRank(int rank) {
         this.rank = rank;
     }
 
