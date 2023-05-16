@@ -78,6 +78,10 @@ public class Game implements Serializable {
         if (defendingChampionCurrentHealth <= 0) {
             System.out.println(attacker + " won!");
             winner = attacker;
+            
+            //set new Ranks
+            Database.updateUsersRanks(attacker, defender);
+
             gameOver = true;
         } else {
             if (attacker.equals(P1)) {
@@ -92,5 +96,7 @@ public class Game implements Serializable {
         return winner;
     }
 
+
+    
 
 }

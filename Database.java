@@ -12,6 +12,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
+
 public class Database {
     private static List<User> users;
 
@@ -93,40 +96,34 @@ public class Database {
         return false;
     }
 
-    public void setUserPoints(String username, int points) {
-        // Find the user with the given username
-        User user = getUserByUsername(username);
-        
-        // Set the user's points
-        user.setPoints(points);
-        
-        // Update the user's rank based on their new points
-        updateRank(user);
-    }
-    // TODO: 5/4/2023
-    public static void updateUsersLevels(String username1, String level1, String username2, String level2) {
-        
-    
-        if (username1.equals(winner)) {
-            if (level2 > 20) {
-                level2 -= 20;
-            } else {
-                level2 = 1;
+
+    public static User getUserByUsername(String username) {
+        for (User user : getUsers()) {
+            if (user.getUsername().equals(username)) {
+                return user;
             }
-            level1 += 20;
-        } else {
-            if (level1 > 20) {
-                level1 -= 20;
-            } else {
-                level1 = 1;
-            }
-            level2 += 20;
         }
-    
-        Rank rank = Rank.getRankForPoints(level1);
-        rank.setUserPoints(username1, level1);
-    
-        rank = Rank.getRankForPoints(level2);
-        rank.setUserPoints(username2, level2);
+        return null; // Return null if no user with the specified username is found
     }
+
+
+    public static void updateUsersRanks(String winner, String loser) {
+
+
+        User w = getUserByUsername(winner);
+        User l = getUserByUsername(loser);
+
+
+        double K_FACTOR = 20; //ELO constant, determines the magnitude of the rank adjustment. between 10 and 32
+
+        double wExpected = 1 / (1 + Math.pow(10, (l.getRank() - w.getRank()) / 400.0));
+        double lExpected = 1 / (1 + Math.pow(10, (w.getRank() - l.getRank()) / 400.0));
+
+        int wNewRank = (int) (w.getRank() + K_FACTOR * (1 - wExpected));
+        int lNewRank = (int) (l.getRank() + K_FACTOR * (0 - lExpected));
+
+        w.setRank(wNewRank);
+        l.setRank(lNewRank); 
+    }
+
 }
